@@ -1,13 +1,26 @@
 const popupOverlay = document.getElementById("popupOverlay");
 const popupClose = document.getElementById("popupClose");
-const leadForm = document.getElementById("leadForm");
 const contactForm = document.getElementById("contactForm");
-const leadMessage = document.getElementById("leadMessage");
 const formMessage = document.getElementById("formMessage");
+
+const startBonusBtn = document.getElementById("startBonusBtn");
+const bonusStatus = document.getElementById("bonusStatus");
+const bonusProgressFill = document.getElementById("bonusProgressFill");
+const bonusResult = document.getElementById("bonusResult");
+const bonusContactBtn = document.getElementById("bonusContactBtn");
 
 const MAIN_FORM_WEBHOOK = "https://n8n.auto-rost.ru/webhook-test/autorost-form";
 
 let popupShown = false;
+let bonusGenerated = false;
+
+const bonuses = [
+  "🎁 Скидка 5% на первый проект",
+  "🎁 Скидка 10% на первый проект",
+  "🎁 Скидка 15% на первый проект",
+  "🎁 Бесплатный мини-аудит процесса",
+  "🎁 Разбор идеи сайта или AI-инструмента"
+];
 
 setTimeout(() => {
   if (!popupShown && popupOverlay) {
@@ -30,32 +43,56 @@ if (popupOverlay) {
   });
 }
 
-if (leadForm) {
-  leadForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
+if (startBonusBtn) {
+  startBonusBtn.addEventListener("click", () => {
+    if (bonusGenerated) return;
 
-    const formData = new FormData(leadForm);
-    const payload = {
-      name: formData.get("lead_name"),
-      contact: formData.get("lead_contact"),
-      type: "lead_magnet",
-      source: "auto-rost.ru",
-      created_at: new Date().toISOString()
-    };
+    bonusGenerated = true;
+    startBonusBtn.disabled = true;
+    startBonusBtn.textContent = "Генерируем...";
+    bonusResult.textContent = "AI подбирает ваш бонус...";
+    bonusStatus.textContent = "Анализируем доступные предложения";
+    bonusProgressFill.style.width = "0%";
 
-    try {
-      console.log("Lead form:", payload);
-      leadMessage.textContent = "Спасибо! Заявка отправлена.";
-      leadForm.reset();
+    let progress = 0;
 
-      setTimeout(() => {
-        if (popupOverlay) {
-          popupOverlay.classList.remove("active");
-        }
-        leadMessage.textContent = "";
-      }, 1800);
-    } catch (error) {
-      leadMessage.textContent = "Ошибка отправки. Попробуйте еще раз.";
+    const interval = setInterval(() => {
+      progress += Math.floor(Math.random() * 15) + 8;
+
+      if (progress >= 100) {
+        progress = 100;
+      }
+
+      bonusProgressFill.style.width = `${progress}%`;
+
+      if (progress < 35) {
+        bonusStatus.textContent = "Проверяем направление проекта...";
+      } else if (progress < 70) {
+        bonusStatus.textContent = "Подбираем подходящий бонус...";
+      } else {
+        bonusStatus.textContent = "Финализируем предложение...";
+      }
+
+      if (progress >= 100) {
+        clearInterval(interval);
+
+        const randomBonus = bonuses[Math.floor(Math.random() * bonuses.length)];
+
+        setTimeout(() => {
+          bonusStatus.textContent = "Бонус готов";
+          bonusResult.textContent = randomBonus;
+          startBonusBtn.textContent = "Бонус получен";
+          bonusContactBtn.classList.add("active");
+        }, 500);
+      }
+    }, 350);
+  });
+}
+
+if (bonusContactBtn) {
+  bonusContactBtn.addEventListener("click", () => {
+    if (popupOverlay) {
+      popupOverlay.classList.remove("active");
     }
   });
 }
