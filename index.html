@@ -217,17 +217,52 @@
   </main>
 
   <div class="popup-overlay" id="popupOverlay">
-    <div class="popup">
+    <div class="popup bonus-popup">
       <button class="popup-close" id="popupClose" type="button">×</button>
-      <h3>Разберём вашу задачу</h3>
-      <p>Подскажу, что лучше собрать: сайт, автоматизацию, бота, AI-ассистента или MVP.</p>
 
-      <form id="leadForm" class="lead-form">
-        <input type="text" name="lead_name" placeholder="Ваше имя" required />
-        <input type="text" name="lead_contact" placeholder="Email или Telegram" required />
-        <button type="submit" class="btn">Получить разбор</button>
-        <div class="form-message" id="leadMessage"></div>
-      </form>
+      <div class="bonus-badge">AI-бонус</div>
+
+      <h3>Получите бонус на первый проект</h3>
+
+      <p>
+        Запустите генератор — он случайно выберет для вас скидку или полезный бонус
+        на сайт, автоматизацию, AI-ассистента или MVP.
+      </p>
+
+      <div class="bonus-box">
+        <div class="bonus-status" id="bonusStatus">Генератор готов к запуску</div>
+
+        <div class="bonus-progress" aria-hidden="true">
+          <div class="bonus-progress-fill" id="bonusProgressFill"></div>
+        </div>
+
+        <div class="bonus-result" id="bonusResult">
+          Нажмите кнопку, чтобы узнать ваш бонус
+        </div>
+      </div>
+
+      <div class="bonus-actions">
+        <button type="button" class="btn" id="startBonusBtn">Запустить генератор</button>
+        <a href="#contact" class="btn btn-ghost bonus-contact-btn" id="bonusContactBtn">Забрать бонус</a>
+      </div>
+
+      <p class="bonus-note">
+        Это демо-генератор бонуса. Итоговые условия обсуждаются после заявки.
+      </p>
+
+      <!-- Старое окно подписки / разбора временно сохранено, но скрыто.
+      <div class="old-lead-popup" style="display:none;">
+        <h3>Разберём вашу задачу</h3>
+        <p>Подскажу, что лучше собрать: сайт, автоматизацию, бота, AI-ассистента или MVP.</p>
+
+        <form id="leadForm" class="lead-form">
+          <input type="text" name="lead_name" placeholder="Ваше имя" required />
+          <input type="text" name="lead_contact" placeholder="Email или Telegram" required />
+          <button type="submit" class="btn">Получить разбор</button>
+          <div class="form-message" id="leadMessage"></div>
+        </form>
+      </div>
+      -->
     </div>
   </div>
 
