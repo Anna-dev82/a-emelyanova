@@ -217,37 +217,44 @@
   </main>
 
   <div class="popup-overlay" id="popupOverlay">
-    <div class="popup bonus-popup">
+    <div class="popup bonus-popup bonus-machine-popup">
       <button class="popup-close" id="popupClose" type="button">×</button>
 
-      <div class="bonus-badge">AI-бонус</div>
+      <div class="bonus-badge">AI-бонус для первого проекта</div>
 
-      <h3>Получите бонус на первый проект</h3>
+      <h3>Получите персональное предложение</h3>
 
       <p>
-        Запустите генератор — он случайно выберет для вас скидку или полезный бонус
-        на сайт, автоматизацию, AI-ассистента или MVP.
+        Запустите AI-барабан: он выберет бонус для сайта, автоматизации,
+        AI-ассистента или MVP.
       </p>
 
-      <div class="bonus-box">
-        <div class="bonus-status" id="bonusStatus">Генератор готов к запуску</div>
-
-        <div class="bonus-progress" aria-hidden="true">
-          <div class="bonus-progress-fill" id="bonusProgressFill"></div>
+      <div class="bonus-machine">
+        <div class="bonus-window">
+          <div class="bonus-track" id="bonusTrack">
+            <div class="bonus-card">⚡ Скидка 5%</div>
+            <div class="bonus-card">🔹 Скидка 10%</div>
+            <div class="bonus-card">💎 Скидка 15%</div>
+            <div class="bonus-card">🧩 Аудит процесса</div>
+            <div class="bonus-card">🤖 Разбор AI-идеи</div>
+            <div class="bonus-card">🚀 MVP-старт</div>
+          </div>
         </div>
 
-        <div class="bonus-result" id="bonusResult">
-          Нажмите кнопку, чтобы узнать ваш бонус
-        </div>
+        <div class="bonus-pointer">◆</div>
+      </div>
+
+      <div class="bonus-result" id="bonusResult">
+        Нажмите кнопку, чтобы запустить подбор бонуса
       </div>
 
       <div class="bonus-actions">
-        <button type="button" class="btn" id="startBonusBtn">Запустить генератор</button>
+        <button type="button" class="btn" id="startBonusBtn">Запустить подбор</button>
         <a href="#contact" class="btn btn-ghost bonus-contact-btn" id="bonusContactBtn">Забрать бонус</a>
       </div>
 
       <p class="bonus-note">
-        Это демо-генератор бонуса. Итоговые условия обсуждаются после заявки.
+        Бонус фиксируется после заявки и обсуждения задачи.
       </p>
 
       <!-- Старое окно подписки / разбора временно сохранено, но скрыто.
