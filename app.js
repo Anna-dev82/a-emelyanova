@@ -25,11 +25,36 @@ const bonusItems = [
 ];
 
 const iconTemplates = {
-  percent: `<svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><circle cx="21" cy="21" r="8" stroke="currentColor" stroke-width="5"/><circle cx="43" cy="43" r="8" stroke="currentColor" stroke-width="5"/><path d="M47 17L17 47" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></svg>`,
-  spark: `<svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><path d="M32 6L38 25L58 32L38 39L32 58L26 39L6 32L26 25L32 6Z" stroke="currentColor" stroke-width="5" stroke-linejoin="round"/></svg>`,
-  diamond: `<svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><path d="M18 10H46L58 26L32 56L6 26L18 10Z" stroke="currentColor" stroke-width="5" stroke-linejoin="round"/><path d="M6 26H58M22 10L32 56M42 10L32 56" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>`,
-  bolt: `<svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><path d="M36 4L14 36H30L26 60L50 26H34L36 4Z" stroke="currentColor" stroke-width="5" stroke-linejoin="round"/></svg>`,
-  audit: `<svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><path d="M28 50C40.15 50 50 40.15 50 28C50 15.85 40.15 6 28 6C15.85 6 6 15.85 6 28C6 40.15 15.85 50 28 50Z" stroke="currentColor" stroke-width="5"/><path d="M44 44L58 58" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><path d="M18 28L25 35L39 20" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+  percent: `
+    <svg class="stack-card-icon" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <circle cx="21" cy="21" r="8" stroke="currentColor" stroke-width="5"/>
+      <circle cx="43" cy="43" r="8" stroke="currentColor" stroke-width="5"/>
+      <path d="M47 17L17 47" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+    </svg>
+  `,
+  spark: `
+    <svg class="stack-card-icon" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <path d="M32 6L38 25L58 32L38 39L32 58L26 39L6 32L26 25L32 6Z" stroke="currentColor" stroke-width="5" stroke-linejoin="round"/>
+    </svg>
+  `,
+  diamond: `
+    <svg class="stack-card-icon" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <path d="M18 10H46L58 26L32 56L6 26L18 10Z" stroke="currentColor" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M6 26H58M22 10L32 56M42 10L32 56" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+    </svg>
+  `,
+  bolt: `
+    <svg class="stack-card-icon" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <path d="M36 4L14 36H30L26 60L50 26H34L36 4Z" stroke="currentColor" stroke-width="5" stroke-linejoin="round"/>
+    </svg>
+  `,
+  audit: `
+    <svg class="stack-card-icon" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <path d="M28 50C40.15 50 50 40.15 50 28C50 15.85 40.15 6 28 6C15.85 6 6 15.85 6 28C6 40.15 15.85 50 28 50Z" stroke="currentColor" stroke-width="5"/>
+      <path d="M44 44L58 58" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+      <path d="M18 28L25 35L39 20" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  `
 };
 
 setTimeout(() => {
@@ -53,25 +78,40 @@ if (popupOverlay) {
   });
 }
 
-function createBonusCard(item) {
+function createStackCard(item) {
   const card = document.createElement("div");
-  card.className = "bonus-card";
-  card.innerHTML = `${iconTemplates[item.icon]}<div class="bonus-card-title">${item.title}</div><div class="bonus-card-subtitle">${item.subtitle}</div>`;
+  card.className = "stack-card";
+  card.innerHTML = `
+    <div>
+      ${iconTemplates[item.icon]}
+      <div class="stack-card-title">${item.title}</div>
+      <div class="stack-card-subtitle">${item.subtitle}</div>
+    </div>
+  `;
   return card;
 }
 
 function prepareBonusTrack() {
   if (!bonusTrack) return;
+
   bonusTrack.innerHTML = "";
+
   const repeatedItems = [];
-  for (let i = 0; i < 7; i++) repeatedItems.push(...bonusItems);
-  repeatedItems.forEach((item) => bonusTrack.appendChild(createBonusCard(item)));
+  for (let i = 0; i < 8; i++) {
+    repeatedItems.push(...bonusItems);
+  }
+
+  repeatedItems.forEach((item) => {
+    bonusTrack.appendChild(createStackCard(item));
+  });
+
   bonusTrack.style.transition = "none";
   bonusTrack.style.transform = "translateY(0)";
 }
 
 function makePromoCode() {
-  return `BONUS-${Math.floor(1000 + Math.random() * 9000)}`;
+  const number = Math.floor(1000 + Math.random() * 9000);
+  return `BONUS-${number}`;
 }
 
 prepareBonusTrack();
@@ -88,8 +128,9 @@ if (startBonusBtn && bonusTrack && bonusResult) {
     startBonusBtn.textContent = "Подбираем бонус...";
     bonusResult.textContent = "Карточки выбирают персональное предложение...";
 
-    const cardStep = 194;
+    const cardStep = window.innerWidth <= 760 ? 100 : 114;
     const randomIndex = Math.floor(Math.random() * bonusItems.length);
+
     const firstStop = -(2 * bonusItems.length * cardStep);
     const finalIndex = 5 * bonusItems.length + randomIndex;
     const finalStop = -(finalIndex * cardStep);
@@ -99,7 +140,7 @@ if (startBonusBtn && bonusTrack && bonusResult) {
 
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        bonusTrack.style.transition = "transform 2.2s cubic-bezier(.2,.75,.25,1)";
+        bonusTrack.style.transition = "transform 2.3s cubic-bezier(.2,.75,.25,1)";
         bonusTrack.style.transform = `translateY(${firstStop}px)`;
       });
     });
@@ -107,33 +148,41 @@ if (startBonusBtn && bonusTrack && bonusResult) {
     setTimeout(() => {
       bonusTrack.style.transition = "none";
       bonusTrack.style.transform = "translateY(0)";
+
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          bonusTrack.style.transition = "transform 4.4s cubic-bezier(.12,.86,.18,1)";
+          bonusTrack.style.transition = "transform 4.8s cubic-bezier(.12,.86,.18,1)";
           bonusTrack.style.transform = `translateY(${finalStop}px)`;
         });
       });
-    }, 2350);
+    }, 2500);
 
     setTimeout(() => {
       const selected = bonusItems[randomIndex];
       const promo = makePromoCode();
+
       selectedBonusText = selected.title;
       bonusResult.textContent = `Ваш бонус: ${selected.title}. Промокод добавлен в форму заявки.`;
+
       if (promoCodeInput) {
         promoCodeInput.value = promo;
         promoCodeInput.dataset.bonus = selected.title;
       }
+
       startBonusBtn.disabled = false;
       startBonusBtn.textContent = "Перейти к заявке";
-      setTimeout(() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }), 700);
-    }, 7050);
+
+      setTimeout(() => {
+        document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+      }, 800);
+    }, 7600);
   });
 }
 
 if (leadForm) {
   leadForm.addEventListener("submit", async (e) => {
     e.preventDefault();
+
     const formData = new FormData(leadForm);
     const payload = {
       name: formData.get("lead_name"),
@@ -142,12 +191,16 @@ if (leadForm) {
       source: "auto-rost.ru",
       created_at: new Date().toISOString()
     };
+
     try {
       console.log("Lead form:", payload);
       leadMessage.textContent = "Спасибо! Заявка отправлена.";
       leadForm.reset();
+
       setTimeout(() => {
-        if (popupOverlay) popupOverlay.classList.remove("active");
+        if (popupOverlay) {
+          popupOverlay.classList.remove("active");
+        }
         leadMessage.textContent = "";
       }, 1800);
     } catch (error) {
@@ -159,7 +212,9 @@ if (leadForm) {
 if (contactForm) {
   contactForm.addEventListener("submit", async (e) => {
     e.preventDefault();
+
     formMessage.textContent = "Отправляем...";
+
     const formData = new FormData(contactForm);
     const payload = {
       name: formData.get("name"),
@@ -171,16 +226,26 @@ if (contactForm) {
       source: "auto-rost.ru",
       created_at: new Date().toISOString()
     };
+
     try {
       const response = await fetch(MAIN_FORM_WEBHOOK, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json"
+        },
         body: JSON.stringify(payload)
       });
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
       formMessage.textContent = "Спасибо! Заявка отправлена.";
       contactForm.reset();
-      if (promoCodeInput) promoCodeInput.dataset.bonus = "";
+
+      if (promoCodeInput) {
+        promoCodeInput.dataset.bonus = "";
+      }
     } catch (error) {
       console.error("Main form error:", error);
       formMessage.textContent = "Ошибка отправки. Попробуйте еще раз.";
