@@ -610,10 +610,6 @@ textarea {
   will-change: transform;
 }
 
-.bonus-track.spin {
-  animation: bonusSpin 2.8s cubic-bezier(.15,.85,.2,1) forwards;
-}
-
 .bonus-card {
   height: 96px;
   display: flex;
@@ -639,14 +635,6 @@ textarea {
   text-shadow:
     0 0 10px rgba(85, 217, 255, 0.95),
     0 0 24px rgba(30, 109, 255, 0.8);
-}
-
-@keyframes bonusSpin {
-  0% { transform: translateY(0); }
-  18% { transform: translateY(-576px); }
-  42% { transform: translateY(-1152px); }
-  68% { transform: translateY(-1728px); }
-  100% { transform: translateY(var(--stop-position)); }
 }
 
 .bonus-result {
