@@ -4,22 +4,22 @@ const contactForm = document.getElementById("contactForm");
 const formMessage = document.getElementById("formMessage");
 
 const startBonusBtn = document.getElementById("startBonusBtn");
-const bonusStatus = document.getElementById("bonusStatus");
-const bonusProgressFill = document.getElementById("bonusProgressFill");
 const bonusResult = document.getElementById("bonusResult");
 const bonusContactBtn = document.getElementById("bonusContactBtn");
+const bonusTrack = document.getElementById("bonusTrack");
 
 const MAIN_FORM_WEBHOOK = "https://n8n.auto-rost.ru/webhook-test/autorost-form";
 
 let popupShown = false;
 let bonusGenerated = false;
 
-const bonuses = [
-  "🎁 Скидка 5% на первый проект",
-  "🎁 Скидка 10% на первый проект",
-  "🎁 Скидка 15% на первый проект",
-  "🎁 Бесплатный мини-аудит процесса",
-  "🎁 Разбор идеи сайта или AI-инструмента"
+const bonusItems = [
+  "⚡ Скидка 5%",
+  "🔹 Скидка 10%",
+  "💎 Скидка 15%",
+  "🧩 Аудит процесса",
+  "🤖 Разбор AI-идеи",
+  "🚀 MVP-старт"
 ];
 
 setTimeout(() => {
@@ -43,49 +43,52 @@ if (popupOverlay) {
   });
 }
 
-if (startBonusBtn) {
+if (startBonusBtn && bonusTrack && bonusResult) {
   startBonusBtn.addEventListener("click", () => {
     if (bonusGenerated) return;
 
     bonusGenerated = true;
     startBonusBtn.disabled = true;
-    startBonusBtn.textContent = "Генерируем...";
-    bonusResult.textContent = "AI подбирает ваш бонус...";
-    bonusStatus.textContent = "Анализируем доступные предложения";
-    bonusProgressFill.style.width = "0%";
+    startBonusBtn.textContent = "Подбираем...";
+    bonusResult.textContent = "AI подбирает бонус под ваш первый проект...";
 
-    let progress = 0;
+    const randomIndex = Math.floor(Math.random() * bonusItems.length);
+    const cardHeight = 96;
 
-    const interval = setInterval(() => {
-      progress += Math.floor(Math.random() * 15) + 8;
+    bonusTrack.innerHTML = "";
 
-      if (progress >= 100) {
-        progress = 100;
+    const repeatedItems = [];
+
+    for (let i = 0; i < 5; i++) {
+      repeatedItems.push(...bonusItems);
+    }
+
+    repeatedItems.push(bonusItems[randomIndex]);
+
+    repeatedItems.forEach((item) => {
+      const card = document.createElement("div");
+      card.className = "bonus-card";
+      card.textContent = item;
+      bonusTrack.appendChild(card);
+    });
+
+    const stopPosition = -((repeatedItems.length - 1) * cardHeight);
+
+    bonusTrack.style.setProperty("--stop-position", `${stopPosition}px`);
+    bonusTrack.classList.remove("spin");
+
+    void bonusTrack.offsetWidth;
+
+    bonusTrack.classList.add("spin");
+
+    setTimeout(() => {
+      bonusResult.textContent = `Ваш бонус: ${bonusItems[randomIndex]}`;
+      startBonusBtn.textContent = "Бонус выбран";
+
+      if (bonusContactBtn) {
+        bonusContactBtn.classList.add("active");
       }
-
-      bonusProgressFill.style.width = `${progress}%`;
-
-      if (progress < 35) {
-        bonusStatus.textContent = "Проверяем направление проекта...";
-      } else if (progress < 70) {
-        bonusStatus.textContent = "Подбираем подходящий бонус...";
-      } else {
-        bonusStatus.textContent = "Финализируем предложение...";
-      }
-
-      if (progress >= 100) {
-        clearInterval(interval);
-
-        const randomBonus = bonuses[Math.floor(Math.random() * bonuses.length)];
-
-        setTimeout(() => {
-          bonusStatus.textContent = "Бонус готов";
-          bonusResult.textContent = randomBonus;
-          startBonusBtn.textContent = "Бонус получен";
-          bonusContactBtn.classList.add("active");
-        }, 500);
-      }
-    }, 350);
+    }, 2900);
   });
 }
 
