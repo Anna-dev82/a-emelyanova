@@ -43,6 +43,34 @@ if (popupOverlay) {
   });
 }
 
+function createBonusCard(text) {
+  const card = document.createElement("div");
+  card.className = "bonus-card";
+  card.textContent = text;
+  return card;
+}
+
+function prepareBonusTrack() {
+  if (!bonusTrack) return;
+
+  bonusTrack.innerHTML = "";
+
+  const repeatedItems = [];
+
+  for (let i = 0; i < 8; i++) {
+    repeatedItems.push(...bonusItems);
+  }
+
+  repeatedItems.forEach((item) => {
+    bonusTrack.appendChild(createBonusCard(item));
+  });
+
+  bonusTrack.style.transition = "none";
+  bonusTrack.style.transform = "translateY(0)";
+}
+
+prepareBonusTrack();
+
 if (startBonusBtn && bonusTrack && bonusResult) {
   startBonusBtn.addEventListener("click", () => {
     if (bonusGenerated) return;
@@ -52,43 +80,33 @@ if (startBonusBtn && bonusTrack && bonusResult) {
     startBonusBtn.textContent = "Подбираем...";
     bonusResult.textContent = "AI подбирает бонус под ваш первый проект...";
 
-    const randomIndex = Math.floor(Math.random() * bonusItems.length);
     const cardHeight = 96;
+    const randomIndex = Math.floor(Math.random() * bonusItems.length);
 
-    bonusTrack.innerHTML = "";
+    const roundsBeforeStop = 6;
+    const targetIndex = roundsBeforeStop * bonusItems.length + randomIndex;
+    const stopPosition = -(targetIndex * cardHeight);
 
-    const repeatedItems = [];
+    bonusTrack.style.transition = "none";
+    bonusTrack.style.transform = "translateY(0)";
 
-    for (let i = 0; i < 5; i++) {
-      repeatedItems.push(...bonusItems);
-    }
-
-    repeatedItems.push(bonusItems[randomIndex]);
-
-    repeatedItems.forEach((item) => {
-      const card = document.createElement("div");
-      card.className = "bonus-card";
-      card.textContent = item;
-      bonusTrack.appendChild(card);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        bonusTrack.style.transition = "transform 3s cubic-bezier(.12,.86,.18,1)";
+        bonusTrack.style.transform = `translateY(${stopPosition}px)`;
+      });
     });
 
-    const stopPosition = -((repeatedItems.length - 1) * cardHeight);
-
-    bonusTrack.style.setProperty("--stop-position", `${stopPosition}px`);
-    bonusTrack.classList.remove("spin");
-
-    void bonusTrack.offsetWidth;
-
-    bonusTrack.classList.add("spin");
-
     setTimeout(() => {
-      bonusResult.textContent = `Ваш бонус: ${bonusItems[randomIndex]}`;
+      const selectedBonus = bonusItems[randomIndex];
+
+      bonusResult.textContent = `Ваш бонус: ${selectedBonus}`;
       startBonusBtn.textContent = "Бонус выбран";
 
       if (bonusContactBtn) {
         bonusContactBtn.classList.add("active");
       }
-    }, 2900);
+    }, 3100);
   });
 }
 
